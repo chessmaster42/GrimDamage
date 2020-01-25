@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using GrimDamage.Parser.Config;
+﻿using GrimDamage.Parser.Config;
 using GrimDamage.Tracking.Model;
 using GrimDamage.Utility;
 using log4net;
-using log4net.Repository.Hierarchy;
 using MoreLinq;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace GrimDamage.Parser.Service {
+namespace GrimDamage.Parser.Service
+{
     public class DamageParsingService {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(DamageParsingService));
         private readonly EntityNamingService _entityNamingService;
-
 
         static class Pattern {
             public const string Nemesis = "/nemesis/";
@@ -38,7 +34,7 @@ namespace GrimDamage.Parser.Service {
 
         public DamageParsingService() {
             _entityNamingService = new EntityNamingService();
-            this._entities = new ConcurrentDictionary<int, Entity>();
+            _entities = new ConcurrentDictionary<int, Entity>();
 
             _entities[0] = new Entity {
                 Id = 0,
@@ -64,7 +60,7 @@ namespace GrimDamage.Parser.Service {
             var entity = GetOrCreate(id);
             entity.Health.Add(new EntityHealthEntry {
                 Health = amount,
-                Timestamp = Timestamp.UTCMillisecondsNow
+                Timestamp = Timestamp.UtcMillisecondsNow
             });
         }
 

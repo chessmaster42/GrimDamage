@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpTestsEx;
-using EvilsoftCommons;
+﻿using GrimDamage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpTestsEx;
 
-namespace UnitTests {
+namespace UnitTests
+{
     [TestClass]
-    public class CppTest {
+    public class CppTest
+    {
         byte[] result = {
             0x55, 0x8b, 0xec, 0x83, 0xec, 0x10, 0x80, 0x7d, 0x10, 0x00, 0x57, 0x8b, 0xf9, 0x75, 0x31, 0xff, 0x15, 0x94,
             0x40, 0xa8, 0x50, 0x8b, 0x0d, 0xe4, 0x96, 0xd0, 0x50, 0x50, 0xe8, 0x3f, 0x67, 0x19, 0x00, 0x84, 0xc0, 0x75,
@@ -33,9 +30,9 @@ namespace UnitTests {
             0xf9, 0x8b, 0xb7, 0x7c, 0x0d, 0x00, 0x00, 0xff, 0x00
         };
 
-
         [TestMethod]
-        public void CanFuckingWork() {
+        public void CanFuckingWork()
+        {
             int lea = 0;
             for (int i = 0; i < result.Length - 5; i++) {
                 if (result[i] == 0x8D && result[i + 1] == 0x8F) {

@@ -1,53 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Threading;
-using System.Windows.Forms;
-using EvilsoftCommons.Exceptions;
-using GrimDamage.Crowdsourced.Web;
-using GrimDamage.GD.Processors;
+﻿using GrimDamage.GD.Processors;
 using GrimDamage.GUI.Browser;
 using GrimDamage.GUI.Browser.dto;
 using GrimDamage.GUI.Forms;
 using GrimDamage.Parser.Service;
 using GrimDamage.Settings;
-using GrimDamage.Statistics.dto;
 using GrimDamage.Statistics.Service;
-using GrimDamage.Utilities;
 using log4net;
-using Newtonsoft.Json;
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.IO;
+using System.Threading;
+using System.Windows.Forms;
 
-namespace GrimDamage {
+namespace GrimDamage
+{
     public partial class Form1 : Form {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(Form1));
         private FormWindowState _previousWindowState = FormWindowState.Normal;
         private System.Timers.Timer _timerReportUsage;
 
-        private readonly StatisticsService _statisticsService;
         private readonly DamageParsingService _damageParsingService = new DamageParsingService();
         private readonly CefBrowserHandler _browser;
         private readonly MessageProcessorCore _messageProcessorCore;
         private readonly PositionTrackerService _positionTrackerService = new PositionTrackerService();
-        private readonly GeneralStateService _generalStateService;
-        private readonly AutoUpdateUtility _autoUpdateUtility = new AutoUpdateUtility();
-        private readonly NameSuggestionService _nameSuggestionService;
         private readonly AppSettings _appSettings;
-        private readonly CSharpJsStateMapper _cSharpJsStateMapper;
-        private readonly bool _showDevtools;
 
-
+        // ReSharper disable once UnusedParameter.Local
         public Form1(CefBrowserHandler browser, AppSettings appSettings, bool showDevtools) {
             InitializeComponent();
             _browser = browser;
             _appSettings = appSettings;
-            _generalStateService = new GeneralStateService(_appSettings);
-            _showDevtools = showDevtools;
 
-            _messageProcessorCore = new MessageProcessorCore(_damageParsingService, _positionTrackerService, _generalStateService, _appSettings);
-            _statisticsService = new StatisticsService(_damageParsingService);
+            GeneralStateService generalStateService = new GeneralStateService(_appSettings);
+            StatisticsService statisticsService = new StatisticsService(_damageParsingService);
+
+            _messageProcessorCore = new MessageProcessorCore(_damageParsingService, _positionTrackerService, generalStateService, _appSettings);
             _browser.JsPojo.OnSave += JsPojoOnOnSave;
             _browser.JsPojo.OnSetLightMode += (sender, args) => {
                 bool isDarkMode = (args as LightModeArgument)?.IsDarkMode ?? false;
@@ -57,34 +45,33 @@ namespace GrimDamage {
             _browser.JsPojo.OnLog += (sender, args) => {
                 string data = (args as SaveParseArgument)?.Data;
                 Logger.Warn(data);
-                ExceptionReporter.ReportIssue(data);
             };
 
-            _nameSuggestionService = new NameSuggestionService(GlobalSettings.BineroHost);
-            _cSharpJsStateMapper = new CSharpJsStateMapper(_browser, _statisticsService, _generalStateService, _positionTrackerService);
-            _browser.JsPojo.OnRequestData += (sender, _args) => {
-                RequestDataArgument args = _args as RequestDataArgument;
-                long start;
-                if (long.TryParse(args.TimestampStart, out start)) {
-                    long end;
-                    if (long.TryParse(args.TimestampEnd, out end)) {
-                        _cSharpJsStateMapper.RequestData(args.Type, start, end, args.EntityId, args.Callback);
+            CSharpJsStateMapper cSharpJsStateMapper = new CSharpJsStateMapper(_browser, statisticsService, generalStateService, _positionTrackerService);
+            _browser.JsPojo.OnRequestData += (sender, rawArgs) => {
+                RequestDataArgument args = rawArgs as RequestDataArgument;
+                if (args == null)
+                {
+                    Logger.Error("Failed to parse data request args");
+                    return;
+                }
+                if (long.TryParse(args.TimestampStart, out long start)) {
+                    if (long.TryParse(args.TimestampEnd, out long end)) {
+                        cSharpJsStateMapper.RequestData(args.Type, start, end, args.EntityId, args.Callback);
                     }
                     else {
                         Logger.Warn($"Could not parse timestamp {args.TimestampEnd} received for {args.Type}");
                     }
                 }
                 else {
-                    Logger.Warn($"Could not parse timestamp {args.TimestampStart} received for {args.Type}");   
+                    Logger.Warn($"Could not parse timestamp {args.TimestampStart} received for {args.Type}");
                 }
             };
-
-
 
 #if !DEBUG
             webViewPanel.Parent.Controls.Remove(webViewPanel);
             Controls.Clear();
-            if (_showDevtools) {
+            if (showDevtools) {
                 Controls.Add(btnShowDevtools);
             }
             Controls.Add(webViewPanel);
@@ -92,8 +79,8 @@ namespace GrimDamage {
             bool itemAssistantInstalled = Directory.Exists(GlobalSettings.ItemAssistantFolder) || new Random().Next(10) < 8;
             if (itemAssistantInstalled) {
                 webViewPanel.Location = new Point { X = 0, Y = 0 };
-                webViewPanel.Width = this.ClientSize.Width;
-                webViewPanel.Height = this.ClientSize.Height;
+                webViewPanel.Width = ClientSize.Width;
+                webViewPanel.Height = ClientSize.Height;
             }
             else {
                 var labels = new[] {
@@ -109,16 +96,14 @@ namespace GrimDamage {
 
                 const int margin = 5;
                 webViewPanel.Location = new Point { X = 0, Y = linkItemAssistant.Height + margin*2 };
-                webViewPanel.Width = this.ClientSize.Width;
-                webViewPanel.Height = this.ClientSize.Height - linkItemAssistant.Height - margin * 2;
+                webViewPanel.Width = ClientSize.Width;
+                webViewPanel.Height = ClientSize.Height - linkItemAssistant.Height - margin * 2;
                 Controls.Add(linkItemAssistant);
 
             }
 #else
             linkItemAssistant.Hide();
 #endif
-
-
 
             _timerReportUsage = new System.Timers.Timer();
             _timerReportUsage.Start();
@@ -152,61 +137,56 @@ namespace GrimDamage {
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e) {
+        private void Form1_Load(object sender, EventArgs eventArgs) {
             Logger.Debug("Starting..");
             if (Thread.CurrentThread.Name == null) {
                 Thread.CurrentThread.Name = "UI";
-                ExceptionReporter.EnableLogUnhandledOnThread();
             }
 
-            this.Closing += Form1_Closing;
+            Closing += Form1_Closing;
 
             {
-                var webView = new WebView(_browser);
-                webView.TopLevel = false;
-                this.webViewPanel.Controls.Add(webView);
+                WebView webView = new WebView(_browser)
+                {
+                    TopLevel = false
+                };
+                webViewPanel.Controls.Add(webView);
                 webView.Show();
             }
             {
-                var debugView = new DebugSettings(_appSettings);
-                debugView.TopLevel = false;
-                this.panelDebugView.Controls.Add(debugView);
+                DebugSettings debugView = new DebugSettings(_appSettings)
+                {
+                    TopLevel = false
+                };
+                panelDebugView.Controls.Add(debugView);
                 debugView.Show();
             }
 
             _messageProcessorCore.OnHookActivation += (_, __) => {
-                this.labelHookStatus.Text = "Hook activated";
-                this.labelHookStatus.ForeColor = System.Drawing.Color.Green;
+                labelHookStatus.Text = "Hook activated";
+                labelHookStatus.ForeColor = Color.Green;
             };
 
-            _autoUpdateUtility.StartReportUsageTimer();
-
-            this.FormClosing += OnFormClosing;
-            this.SizeChanged += Form1_SizeChanged;
+            FormClosing += OnFormClosing;
+            SizeChanged += Form1_SizeChanged;
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs formClosingEventArgs) {
-            this.SizeChanged -= Form1_SizeChanged;
-            _autoUpdateUtility.Dispose();
+            SizeChanged -= Form1_SizeChanged;
             _timerReportUsage?.Stop();
             _timerReportUsage?.Dispose();
             _timerReportUsage = null;
         }
 
-
-        private void Form1_Closing(object sender, CancelEventArgs e) {
+        private void Form1_Closing(object sender, CancelEventArgs eventArgs) {
             _messageProcessorCore?.Dispose();
         }
 
-
-
-        private void btnShowDevtools_Click(object sender, EventArgs e) {
+        private void btnShowDevtools_Click(object sender, EventArgs eventArgs) {
             _browser.ShowDevTools();
         }
 
-
-
-        private void btnLoadSave_Click(object sender, EventArgs e) {
+        private void btnLoadSave_Click(object sender, EventArgs eventArgs) {
             var ofd = new OpenFileDialog {
                 InitialDirectory = GlobalSettings.SavedParsePath,
                 Filter = "Damage logs (*.dmg)|*.dmg|All files (*.*)|*.*"
@@ -228,21 +208,13 @@ namespace GrimDamage {
             }
         }
 
-        private void linkDonate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=29J3HM8G3CQSA");
-        }
-
-        private void linkItemAssistant_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            Process.Start("http://grimdawn.dreamcrash.org/ia/");
-        }
-
-        private void Form1_SizeChanged(object sender, EventArgs e) {
+        private void Form1_SizeChanged(object sender, EventArgs eventArgs) {
             try {
                 if (WindowState == FormWindowState.Minimized) {
                     Hide();
                     notifyIcon1.Visible = true;
                 }
-                else /*if (this.WindowState == FormWindowState.Normal)*/ {
+                else {
                     notifyIcon1.Visible = false;
                     _previousWindowState = WindowState;
                 }
@@ -254,11 +226,11 @@ namespace GrimDamage {
             }
         }
 
-        private void trayContextMenuStrip_Opening(object sender, CancelEventArgs e) {
-            e.Cancel = false;
+        private void trayContextMenuStrip_Opening(object sender, CancelEventArgs eventArgs) {
+            eventArgs.Cancel = false;
         }
 
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e) {
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs eventArgs) {
 
             Visible = true;
             notifyIcon1.Visible = false;

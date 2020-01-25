@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GrimDamage.Parser.Model {
+﻿namespace GrimDamage.Parser.Model
+{
     public enum EventType {
         DamageDealt,
         LifeLeech,
@@ -13,7 +8,7 @@ namespace GrimDamage.Parser.Model {
         SetDefenderName,
         SetDefenderId,
         Deflect,
-        SetDOT,
+        SetDamageOverTime,
         SetArmorAbsorb,
         SetFailedDeflect,
     }

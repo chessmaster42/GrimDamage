@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EvilsoftCommons;
-using GrimDamage.GD.Dto;
+﻿using GrimDamage.GD.Dto;
 using GrimDamage.Parser.Service;
 using GrimDamage.Settings;
 using log4net;
 
-namespace GrimDamage.GD.Processors {
+namespace GrimDamage.GD.Processors
+{
     class GdLogMessageProcessor : IMessageProcessor {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(IMessageProcessor));
         private readonly AppSettings _appSettings;

@@ -1,2 +1,3 @@
-This tool requires .Net Framework 4.5.2
-If you're running Windows 10 or newer, this comes pre-installed.
+This tool requires .Net Framework 4.6.2
+If you're running Windows 10 or newer, this probably comes pre-installed.
+Otherwise go to https://www.microsoft.com/en-us/download/details.aspx?id=53344 to download it.

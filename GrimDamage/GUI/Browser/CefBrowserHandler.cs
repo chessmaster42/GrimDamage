@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using CefSharp;
+﻿using CefSharp;
 using CefSharp.WinForms;
 using log4net;
+using System;
+using System.IO;
+using System.Windows.Forms;
 
-namespace GrimDamage.GUI.Browser {
-
+namespace GrimDamage.GUI.Browser
+{
     public class CefBrowserHandler : IDisposable {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(CefBrowserHandler));
         private ChromiumWebBrowser _browser;
@@ -47,6 +43,7 @@ namespace GrimDamage.GUI.Browser {
                     MessageBoxButtons.OK);
             }
         }
+
         public void NotifyUpdate() {
             if (_browser.IsBrowserInitialized)
                 _browser.ExecuteScriptAsync("_itemsReceived();");
@@ -62,56 +59,35 @@ namespace GrimDamage.GUI.Browser {
                 _browser.ExecuteScriptAsync($"_saveReceived({data});");
             }
         }
-        /*
-        public void ShowLoadingAnimation() {
-            if (_browser.IsBrowserInitialized)
-                _browser.ExecuteScriptAsync("isLoading(true);");
-        }
-
-        public void RefreshItems() {
-            if (_browser.IsBrowserInitialized) {
-                _browser.ExecuteScriptAsync("refreshData();");
-            }
-            else {
-                Logger.Warn("Attempted to update items but CEF not yet initialized.");
-            }
-        }
-
-        public void LoadItems() {
-            if (_browser.IsBrowserInitialized) {
-                _browser.ExecuteScriptAsync("addData();");
-            }
-            else {
-                Logger.Warn("Attempted to update items but CEF not yet initialized.");
-            }
-        }
-        */
 
         public void InitializeChromium(
             string startPage,
             WebViewJsPojo bindeable, 
-            EventHandler<IsBrowserInitializedChangedEventArgs> browserIsBrowserInitializedChanged
-            ) {
-            this.JsPojo = bindeable;
-            this.JsInteractor = new WebViewJsInteractor(bindeable);
+            EventHandler isBrowserInitializedChanged
+        ) {
+            JsPojo = bindeable;
+            JsInteractor = new WebViewJsInteractor(bindeable);
 
             try {
                 Logger.Info("Creating Chromium instance..");
+
+                CefSharpSettings.LegacyJavascriptBindingEnabled = true;
+
                 Cef.EnableHighDPISupport();
-                Cef.Initialize();
+                Cef.Initialize(new CefSettings());
 
                 _browser = new ChromiumWebBrowser(startPage);
                 
-                _browser.RegisterJsObject("data", bindeable, false);
+                _browser.RegisterJsObject("data", bindeable);
                 _browser.RequestHandler = new DisableLinksRequestHandler();
 
-                if (browserIsBrowserInitializedChanged != null)
-                    _browser.IsBrowserInitializedChanged += browserIsBrowserInitializedChanged;
+                if (isBrowserInitializedChanged != null)
+                    _browser.IsBrowserInitializedChanged += isBrowserInitializedChanged;
 
                 //browser.RequestHandler = new TransferUrlHijack { TransferMethod = transferItem };
                 Logger.Info("Chromium created..");
             }
-            catch (System.IO.FileNotFoundException ex) {
+            catch (FileNotFoundException ex) {
                 MessageBox.Show("Error \"File Not Found\" loading Chromium, did you forget to install Visual C++ runtimes?\n\nvc_redist86 in the IA folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Logger.Warn(ex.Message);
                 Logger.Warn(ex.StackTrace);

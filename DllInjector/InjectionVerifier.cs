@@ -1,82 +1,94 @@
 ﻿using log4net;
-//using EvilsoftCommons.Exceptions;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace EvilsoftCommons.DllInjector {
+namespace DllInjector
+{
     /// <summary>
-    /// Runs the Microsoft "Listdlls.exe" to verify that the DLL injection was successful.
+    /// Runs the Microsoft "ListDLLs.exe" to verify that the DLL injection was successful.
     /// Sometimes the injection reports as successful, but the DLL does not persist. (unloaded by anti virus?)
     /// </summary>
-    public class InjectionVerifier {
-        static ILog logger = LogManager.GetLogger(typeof(InjectionVerifier));
-
+    public static class InjectionVerifier {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(InjectionVerifier));
+        // ReSharper disable once StringLiteralTypo
+        private static readonly string Filename = "Listdlls.exe";
 
         /// <summary>
-        /// Remove nag screens on running ListDLLs
+        /// 
         /// </summary>
-        public static void FixRegistryNagOnListDlls() {
-            try {
-                RegistryKey key = Registry.CurrentUser.OpenSubKey("Software", true);
-
-
-                key.CreateSubKey("Sysinternals");
-                key = key.OpenSubKey("Sysinternals", true);
-
-                key.CreateSubKey("ListDLLs");
-                key = key.OpenSubKey("ListDLLs", true);
-
-                key.SetValue("EulaAccepted", 1);
-
-                key.Close();
-            }
-            catch (Exception ex) {
-                logger.Warn("Error trying to create registry keys, this is not critical.");
-                logger.Warn(ex.Message);
-            }
-        }
-
+        /// <param name="pid"></param>
+        /// <param name="dll"></param>
+        /// <returns></returns>
         public static bool VerifyInjection(long pid, string dll) {
             FixRegistryNagOnListDlls();
 
-            logger.Info("Running Listdlls...");
-            if (File.Exists("Listdlls.exe")) {
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = "Listdlls.exe";
-                startInfo.Arguments = String.Format("-d {0}", dll);
-                startInfo.RedirectStandardOutput = true;
-                startInfo.RedirectStandardError = true;
-                startInfo.UseShellExecute = false;
+            Logger.Info("Running ListDLLs...");
 
-                startInfo.CreateNoWindow = true;
+            if (File.Exists(Filename)) {
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = Filename,
+                    Arguments = $"-d {dll}",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
 
-                Process processTemp = new Process();
-                processTemp.StartInfo = startInfo;
-                processTemp.EnableRaisingEvents = true;
+                Process processTemp = new Process
+                {
+                    StartInfo = startInfo,
+                    EnableRaisingEvents = true
+                };
+
                 try {
                     string spid = pid.ToString();
                     processTemp.Start();
                     while (!processTemp.StandardOutput.EndOfStream) {
                         string line = processTemp.StandardOutput.ReadLine();
-                        if (line.EndsWith(spid))
+                        if (line?.EndsWith(spid) == true)
+                        {
+                            Logger.Info("Injection successfully verified");
                             return true;
+                        }
                     }
                 }
                 catch (Exception ex) {
-                    logger.Warn("Exception while attempting to verify injection.. " + ex.Message + ex.StackTrace);
-                    //ExceptionReporter.ReportException(ex);
+                    Logger.Warn("Exception while attempting to verify injection.. " + ex.Message + ex.StackTrace);
                 }
             }
             else {
-                logger.Warn("Could not find Listdlls.exe, unable to verify successful injection.");
+                Logger.Warn("Could not find ListDLLs.exe, unable to verify successful injection.");
             }
             return false;
         }
 
+        /// <summary>
+        /// Adds registry entries to prevent ListDLL nag screens
+        /// </summary>
+        private static void FixRegistryNagOnListDlls()
+        {
+            try
+            {
+                RegistryKey key = Registry.CurrentUser.OpenSubKey("Software", true);
+
+                key?.CreateSubKey("Sysinternals");
+                key = key?.OpenSubKey("Sysinternals", true);
+
+                key?.CreateSubKey("ListDLLs");
+                key = key?.OpenSubKey("ListDLLs", true);
+
+                key?.SetValue("EulaAccepted", 1);
+
+                key?.Close();
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("Error trying to create registry keys, this is not critical.");
+                Logger.Warn(ex.Message);
+            }
+        }
     }
 }

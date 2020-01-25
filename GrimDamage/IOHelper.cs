@@ -5,12 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace EvilsoftCommons {
-
-    public class IOHelper {
-
-        private static ILog logger = LogManager.GetLogger(typeof(IOHelper));
-
+namespace GrimDamage
+{
+    // ReSharper disable once InconsistentNaming
+    public class IOHelper
+    {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(IOHelper));
 
         public static bool IsFileLocked(FileInfo file) {
             FileStream stream = null;
@@ -19,26 +19,25 @@ namespace EvilsoftCommons {
                 stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
             }
             catch (IOException) {
-                //the file is unavailable because it is:
-                //still being written to
-                //or being processed by another thread
-                //or does not exist (has already been processed)
+                // the file is unavailable because it is:
+                // still being written to
+                // or being processed by another thread
+                // or does not exist (has already been processed)
                 return true;
             }
-            finally {
-                if (stream != null)
-                    stream.Close();
+            finally
+            {
+                stream?.Close();
             }
 
-            //file is not locked
+            // file is not locked
             return false;
         }
 
-
-        public static int ReadInteger(FileStream fs, bool endian = false) {
+        public static int ReadInteger(FileStream fs, bool endian) {
             byte[] array = new byte[4];
             if (fs.Read(array, 0, 4) != 4) {
-                logger.WarnFormat("ReadInteger called with only {0} bytes remaining!", fs.Length - fs.Position);
+                Logger.WarnFormat("ReadInteger called with only {0} bytes remaining!", fs.Length - fs.Position);
                 return 0;
             }
             else {
@@ -48,6 +47,7 @@ namespace EvilsoftCommons {
                 return BitConverter.ToInt32(array, 0);
             }
         }
+
         public static string GetPrefixString(byte[] data, int pos) {
             List<char> str = new List<char>();
 
@@ -62,11 +62,10 @@ namespace EvilsoftCommons {
             return new string(str.ToArray<char>());
         }
 
-
         public static int ReadInteger(FileStream fs) {
             byte[] array = new byte[4];
             if (fs.Read(array, 0, 4) != 4) {
-                logger.WarnFormat("ReadInteger called with only {0} bytes remaining!", fs.Length - fs.Position);
+                Logger.WarnFormat("ReadInteger called with only {0} bytes remaining!", fs.Length - fs.Position);
                 return 0;
             }
             else {
@@ -80,7 +79,7 @@ namespace EvilsoftCommons {
         public static long ReadLong(FileStream fs) {
             byte[] array = new byte[8];
             if (fs.Read(array, 0, 8) != 8) {
-                logger.WarnFormat("ReadLong called with only {0} bytes remaining!", fs.Length - fs.Position);
+                Logger.WarnFormat("ReadLong called with only {0} bytes remaining!", fs.Length - fs.Position);
                 return 0;
             }
             else {
@@ -91,11 +90,10 @@ namespace EvilsoftCommons {
             }
         }
 
-
         public static uint ReadUInteger(FileStream fs, bool endian = false) {
             byte[] array = new byte[4];
             if (fs.Read(array, 0, 4) != 4) {
-                logger.WarnFormat("ReadUInteger called with only {0} bytes remaining!", fs.Length - fs.Position);
+                Logger.WarnFormat("ReadUInteger called with only {0} bytes remaining!", fs.Length - fs.Position);
                 return 0;
             }
             else {
@@ -106,11 +104,10 @@ namespace EvilsoftCommons {
             }
         }
 
-
         public static ushort ReadUShort(FileStream fs, bool endian = false) {
             byte[] array = new byte[2];
             if (fs.Read(array, 0, 2) != 2) {
-                logger.WarnFormat("ReadUShort called with only {0} bytes remaining!", fs.Length - fs.Position);
+                Logger.WarnFormat("ReadUShort called with only {0} bytes remaining!", fs.Length - fs.Position);
                 return 0;
             }
             else {
@@ -121,19 +118,17 @@ namespace EvilsoftCommons {
             }
         }
 
-
         public static string ReadString(FileStream fs) {
             uint length = ReadUInteger(fs);
             long remaining = fs.Length - fs.Position;
             if (length > remaining || length > 1024 * 10 || length <= 0) {
-                //throw new ArgumentOutOfRangeException(String.Format("Could not parse string of length {0}", length));
                 return string.Empty;
             }
 
             char[] sub = new char[length];
             byte[] buf = new byte[length];
             if (fs.Read(buf, 0, (int)length) != length) {
-                logger.WarnFormat("ReadString requested {0} bytes but only got ... bytes", length);
+                Logger.WarnFormat("ReadString requested {0} bytes but only got ... bytes", length);
             }
             for (int i = 0; i < length; i++) {
                 sub[i] = Convert.ToChar(buf[i]);
@@ -141,19 +136,17 @@ namespace EvilsoftCommons {
 
             return new String(sub);
         }
-
 
         public static string ReadString(FileStream fs, uint length) {
             long remaining = fs.Length - fs.Position;
             if (length > remaining || length > 1024 * 10 || length <= 0) {
-                //throw new ArgumentOutOfRangeException(String.Format("Could not parse string of length {0}", length));
                 return string.Empty;
             }
 
             char[] sub = new char[length];
             byte[] buf = new byte[length];
             if (fs.Read(buf, 0, (int)length) != length) {
-                logger.WarnFormat("ReadString requested {0} bytes but only got ... bytes", length);
+                Logger.WarnFormat("ReadString requested {0} bytes but only got ... bytes", length);
             }
             for (int i = 0; i < length; i++) {
                 sub[i] = Convert.ToChar(buf[i]);
@@ -162,52 +155,47 @@ namespace EvilsoftCommons {
             return new String(sub);
         }
 
-
-
         public static ushort GetShort(byte[] data, uint pos) {
-            byte[] bytes = new byte[] { (byte)data[pos], (byte)data[pos + 1] };
+            byte[] bytes = { data[pos], data[pos + 1] };
             if (!BitConverter.IsLittleEndian)
                 Array.Reverse(bytes);
             return BitConverter.ToUInt16(bytes, 0);
         }
 
         public static ushort GetShort(byte[] data, int pos) {
-            byte[] bytes = new byte[] { (byte)data[pos], (byte)data[pos + 1] };
+            byte[] bytes = { data[pos], data[pos + 1] };
             if (!BitConverter.IsLittleEndian)
                 Array.Reverse(bytes);
             return BitConverter.ToUInt16(bytes, 0);
         }
 
-
         public static uint GetUInt(byte[] data, uint pos) {
-            byte[] bytes = new byte[] { (byte)data[pos], (byte)data[pos + 1], (byte)data[pos + 2], (byte)data[pos + 3] };
-            if (!BitConverter.IsLittleEndian)
-                Array.Reverse(bytes);
-            return BitConverter.ToUInt32(bytes, 0);
-        }
-        public static uint GetUInt(byte[] data, int pos) {
-            byte[] bytes = new byte[] { (byte)data[pos], (byte)data[pos + 1], (byte)data[pos + 2], (byte)data[pos + 3] };
+            byte[] bytes = { data[pos], data[pos + 1], data[pos + 2], data[pos + 3] };
             if (!BitConverter.IsLittleEndian)
                 Array.Reverse(bytes);
             return BitConverter.ToUInt32(bytes, 0);
         }
 
+        public static uint GetUInt(byte[] data, int pos) {
+            byte[] bytes = { data[pos], data[pos + 1], data[pos + 2], data[pos + 3] };
+            if (!BitConverter.IsLittleEndian)
+                Array.Reverse(bytes);
+            return BitConverter.ToUInt32(bytes, 0);
+        }
 
         public static float GetFloat(byte[] data, uint pos) {
-            byte[] bytes = new byte[] { (byte)data[pos], (byte)data[pos + 1], (byte)data[pos + 2], (byte)data[pos + 3] };
+            byte[] bytes = { data[pos], data[pos + 1], data[pos + 2], data[pos + 3] };
             if (!BitConverter.IsLittleEndian)
                 Array.Reverse(bytes);
             return BitConverter.ToSingle(bytes, 0);
         }
 
-
         public static double GetDouble(byte[] data, uint pos) {
             return BitConverter.ToDouble(data, (int)pos);
         }
 
-
         public static int GetInt(byte[] data, int pos) {
-            byte[] bytes = new byte[] { (byte)data[pos], (byte)data[pos + 1], (byte)data[pos + 2], (byte)data[pos + 3] };
+            byte[] bytes = { data[pos], data[pos + 1], data[pos + 2], data[pos + 3] };
             if (!BitConverter.IsLittleEndian)
                 Array.Reverse(bytes);
             return BitConverter.ToInt32(bytes, 0);
@@ -222,12 +210,11 @@ namespace EvilsoftCommons {
         }
 
         public static long GetLong(byte[] data, int pos) {
-            byte[] bytes = new byte[] { (byte)data[pos], (byte)data[pos + 1], (byte)data[pos + 2], (byte)data[pos + 3], (byte)data[pos + 4], (byte)data[pos + 5], (byte)data[pos + 6], (byte)data[pos + 7] };
+            byte[] bytes = { data[pos], data[pos + 1], data[pos + 2], data[pos + 3], data[pos + 4], data[pos + 5], data[pos + 6], data[pos + 7] };
             if (!BitConverter.IsLittleEndian)
                 Array.Reverse(bytes);
             return BitConverter.ToInt64(bytes, 0);
         }
-
 
         /// <summary>
         /// Return a null terminated string (not including the null)
@@ -248,7 +235,7 @@ namespace EvilsoftCommons {
         public static ushort ReadShort(FileStream fs) {
             byte[] array = new byte[2];
             if (fs.Read(array, 0, 2) != 2) {
-                logger.WarnFormat("ReadShort called with only {0} bytes remaining!", fs.Length - fs.Position);
+                Logger.WarnFormat("ReadShort called with only {0} bytes remaining!", fs.Length - fs.Position);
                 return 0;
             }
             else {
@@ -256,11 +243,9 @@ namespace EvilsoftCommons {
             }
         }
 
-
         public static void WriteBytePrefixed(FileStream fs, string value) {
-            List<char> str = new List<char>();
             if (string.IsNullOrEmpty(value)) {
-                fs.WriteByte((byte)0);
+                fs.WriteByte(0);
             }
             else {
                 byte[] data = Encoding.ASCII.GetBytes(value);
@@ -273,21 +258,27 @@ namespace EvilsoftCommons {
         public static void Write(FileStream fs, bool value) {
             fs.WriteByte((byte)(value ? 1 : 0));
         }
-        public static void Write(FileStream fs, Int32 value) {
+
+        public static void Write(FileStream fs, int value) {
             Write(fs, BitConverter.GetBytes(value));
         }
-        public static void Write(FileStream fs, Int16 value) {
+
+        public static void Write(FileStream fs, short value) {
             Write(fs, BitConverter.GetBytes(value));
         }
+
         public static void Write(FileStream fs, byte value) {
             fs.WriteByte(value);
         }
-        public static void Write(FileStream fs, Int64 value) {
+
+        public static void Write(FileStream fs, long value) {
             Write(fs, BitConverter.GetBytes(value));
         }
+
         public static void Write(FileStream fs, uint value) {
             Write(fs, BitConverter.GetBytes(value));
         }
+
         public static void Write(FileStream fs, byte[] value) {
             fs.Write(value, 0, value.Length);
         }

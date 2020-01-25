@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GrimDamage.GD.Dto;
+﻿using GrimDamage.GD.Dto;
 using GrimDamage.Parser.Model;
 using GrimDamage.Parser.Service;
-using EvilsoftCommons;
 
-namespace GrimDamage.GD.Processors {
+namespace GrimDamage.GD.Processors
+{
     class GdGameEventProcessor : IMessageProcessor {
         private GeneralStateService _generalStateService;
 

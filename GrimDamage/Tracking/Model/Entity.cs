@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GrimDamage.Tracking.Model {
+namespace GrimDamage.Tracking.Model
+{
     public class Entity {
         public Entity() {
-            this.DamageDealt = new ConcurrentBag<DamageDealtEntry>();
-            this.DamageTaken = new ConcurrentBag<DamageTakenEntry>();
-            this.DamageBlocked = new ConcurrentBag<DamageBlockedEntry>();
-            this.Health = new ConcurrentBag<EntityHealthEntry>();
-            this.Resists = new ConcurrentBag<ResistUpdatedEntry>();
+            DamageDealt = new ConcurrentBag<DamageDealtEntry>();
+            DamageTaken = new ConcurrentBag<DamageTakenEntry>();
+            DamageBlocked = new ConcurrentBag<DamageBlockedEntry>();
+            Health = new ConcurrentBag<EntityHealthEntry>();
+            Resists = new ConcurrentBag<ResistUpdatedEntry>();
         }
-
-
 
         public int Id { get; set; }
 

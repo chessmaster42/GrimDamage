@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GrimDamage.Parser.Service;
+﻿using GrimDamage.Parser.Service;
 using GrimDamage.Statistics.Service;
 using log4net;
 using Newtonsoft.Json;
 
-namespace GrimDamage.GUI.Browser {
+namespace GrimDamage.GUI.Browser
+{
     class CSharpJsStateMapper {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(CSharpJsStateMapper));
         private readonly CefBrowserHandler _browser;

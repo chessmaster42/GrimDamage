@@ -138,7 +138,7 @@
             this.linkItemAssistant.TabStop = true;
             this.linkItemAssistant.Text = "Having trouble managing your items?";
             this.linkItemAssistant.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.linkItemAssistant.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkItemAssistant_LinkClicked);
+            //this.linkItemAssistant.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkItemAssistant_LinkClicked);
             // 
             // notifyIcon1
             // 

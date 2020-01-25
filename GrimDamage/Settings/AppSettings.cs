@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GrimDamage.Settings {
+﻿namespace GrimDamage.Settings
+{
     public class AppSettings {
         public bool LogStateChanges { get; set; }
         public bool LogProcessedMessages { get; set; }

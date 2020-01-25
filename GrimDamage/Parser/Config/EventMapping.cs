@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using GrimDamage.Parser.Model;
+﻿using GrimDamage.Parser.Model;
 using GrimDamage.Tracking.Model;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
-namespace GrimDamage.Parser.Config {
+namespace GrimDamage.Parser.Config
+{
     public static class EventMapping {
 
         public static Dictionary<EventType, Regex> RegexMap = new Dictionary<EventType, Regex>()
@@ -20,7 +17,7 @@ namespace GrimDamage.Parser.Config {
             { EventType.SetDefenderName, new Regex(@"\s*defenderName = (.*)", RegexOptions.Compiled) },
             { EventType.SetDefenderId, new Regex(@"\s*defenderID = (\d+)", RegexOptions.Compiled) },
             { EventType.Deflect, new Regex(@".*Deflect Projectile Chance \((\d+\.\d+)\) caused a deflection", RegexOptions.Compiled) },
-            { EventType.SetDOT, new Regex(@"\s*Total Damage:  Absolute \((\d+\.\d+)\), Over Time \((\d+\.\d+)\)", RegexOptions.Compiled) }, // 1274+1128?
+            { EventType.SetDamageOverTime, new Regex(@"\s*Total Damage:  Absolute \((\d+\.\d+)\), Over Time \((\d+\.\d+)\)", RegexOptions.Compiled) }, // 1274+1128?
             { EventType.SetArmorAbsorb, new Regex(@"\s*protectionAbsorption = (\d+\.\d+)", RegexOptions.Compiled) },
             { EventType.SetFailedDeflect, new Regex(@".*Deflect Projectile Chance \((\d+\.\d+)\) not met \((\d+\.\d+\))", RegexOptions.Compiled) },
         };
@@ -34,7 +31,7 @@ namespace GrimDamage.Parser.Config {
             { EventType.SetDefenderName, @"\s*defenderName = (.*)" },
             { EventType.SetDefenderId, @"\s*defenderID = (\d+)" },
             { EventType.Deflect, @".*Deflect Projectile Chance \((\d+\.\d+)\) caused a deflection" },
-            { EventType.SetDOT, @"\s*Total Damage:  Absolute \((\d+\.\d+)\), Over Time \((\d+\.\d+)\)" }, // 1274+1128?
+            { EventType.SetDamageOverTime, @"\s*Total Damage:  Absolute \((\d+\.\d+)\), Over Time \((\d+\.\d+)\)" }, // 1274+1128?
             { EventType.SetArmorAbsorb, @"\s*protectionAbsorption = (\d+\.\d+)" },
             { EventType.SetFailedDeflect, @".*Deflect Projectile Chance \((\d+\.\d+)\) not met \((\d+\.\d+\))" },
         };

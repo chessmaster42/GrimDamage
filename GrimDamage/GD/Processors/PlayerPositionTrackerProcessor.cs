@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EvilsoftCommons;
-using GrimDamage.GD.Dto;
+﻿using GrimDamage.GD.Dto;
 using GrimDamage.Settings;
 using GrimDamage.Statistics.model;
 using GrimDamage.Statistics.Service;
 using log4net;
 
-namespace GrimDamage.GD.Processors {
+namespace GrimDamage.GD.Processors
+{
     class PlayerPositionTrackerProcessor : IMessageProcessor {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(PlayerPositionTrackerProcessor));
         private readonly PositionTrackerService _positionTrackerService;
@@ -51,9 +46,6 @@ namespace GrimDamage.GD.Processors {
                                 $"Received a {type}({b}, {c}, {d} => ({IOHelper.GetFloat(data, 4)}, {IOHelper.GetFloat(data, 8)}, {IOHelper.GetFloat(data, 12)}, {IOHelper.GetInt(data, 0)})");
                         }
                     }
-
-                    
-                   
 
                     return true;
             }

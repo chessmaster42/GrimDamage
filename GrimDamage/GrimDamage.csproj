@@ -1,39 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\CefSharp.WinForms.51.0.0\build\CefSharp.WinForms.props" Condition="Exists('..\packages\CefSharp.WinForms.51.0.0\build\CefSharp.WinForms.props')" />
-  <Import Project="..\packages\CefSharp.Common.51.0.0\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.51.0.0\build\CefSharp.Common.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5A15361C-AAFE-46CF-81F1-B55A8A485980}</ProjectGuid>
+    <TargetFramework>net462</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GrimDamage</RootNamespace>
     <AssemblyName>GrimDamage</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <Authors>Joseph Pearson</Authors>
+    <Company></Company>
+    <Product>GrimDamage</Product>
+    <Description></Description>
+    <Copyright>Copyright © 2020</Copyright>
     <FileAlignment>512</FileAlignment>
+    <Platforms>x86</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <ApplicationIcon>gd.ico</ApplicationIcon>
+    <StartupObject>GrimDamage.Program</StartupObject>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  
+  <PropertyGroup>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -41,165 +43,49 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>gd.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>GrimDamage.Program</StartupObject>
-  </PropertyGroup>
+  
   <ItemGroup>
-    <Reference Include="AutoUpdater.NET">
-      <HintPath>..\Auto updater\AutoUpdater.NET\bin\Release\AutoUpdater.NET.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\DllInjector\bin\Debug\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="cef.redist.x64" Version="75.1.14" />
+    <PackageReference Include="cef.redist.x86" Version="75.1.14" />
+    <PackageReference Include="CefSharp.Common" Version="75.1.143" />
+    <PackageReference Include="CefSharp.WinForms" Version="75.1.143" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="3.1.0" />
+    <PackageReference Include="MoreLinq.Source.MoreEnumerable.MaxBy" Version="1.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
   </ItemGroup>
+  
   <ItemGroup>
-    <Content Include="Content\js\charts\resist-graph.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\js\data\Database.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\js\logic\graph-damage-dealt-single-aoe.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\js\logic\graph-damage-taken-graph-handler.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\js\logic\PetDamageDealtGraphHandler.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\js\logic\pie-chart-damage-taken-processor.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Compile Include="Crowdsourced\Web\NameSuggestionService.cs" />
-    <Compile Include="Experimenting\ReadGameDll.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GD\Dto\MessageType.cs" />
-    <Compile Include="GD\Processors\DetectPlayerHitpointsProcessor.cs" />
-    <Compile Include="GD\Processors\GDLogMessageProcessor.cs" />
-    <Compile Include="GD\Processors\GDGameEventProcessor.cs" />
-    <Compile Include="GD\Processors\IMessageProcessor.cs" />
-    <Compile Include="GD\Processors\MessageProcessorCore.cs" />
-    <Compile Include="GD\Processors\PlayerDetectionProcessor.cs" />
-    <Compile Include="GD\Processors\PlayerPositionTrackerProcessor.cs" />
-    <Compile Include="GD\Processors\PlayerResistMonitor.cs" />
-    <Compile Include="GUI\Browser\CefBrowserHandler.cs" />
-    <Compile Include="GUI\Browser\CSharpJsStateMapper.cs" />
-    <Compile Include="GUI\Browser\DataRequestType.cs" />
-    <Compile Include="GUI\Browser\DisableLinksRequestHandler.cs" />
-    <Compile Include="GUI\Browser\dto\LightModeArgument.cs" />
-    <Compile Include="GUI\Browser\dto\RequestDataArgument.cs" />
-    <Compile Include="GUI\Browser\dto\SaveParseArgument.cs" />
-    <Compile Include="GUI\Browser\dto\SuggestLocationNameArgument.cs" />
-    <Compile Include="GUI\Browser\WebViewJsInteractor.cs" />
-    <Compile Include="GUI\Browser\WebViewJsPojo.cs" />
-    <Compile Include="GUI\Forms\DebugSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\Forms\DebugSettings.Designer.cs">
-      <DependentUpon>DebugSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Forms\WebView.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\Forms\WebView.Designer.cs">
-      <DependentUpon>WebView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="IOHelper.cs" />
-    <Compile Include="MoreLinq\MoreEnumerable.MaxBy.cs" />
-    <Compile Include="Parser\Config\EventMapping.cs" />
-    <Compile Include="Parser\Model\EventType.cs" />
-    <Compile Include="Parser\Model\GrimState.cs" />
-    <Compile Include="Parser\Service\DamageParsingService.cs" />
-    <Compile Include="Parser\Service\EntityNamingService.cs" />
-    <Compile Include="Parser\Service\GeneralStateService.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings\AppSettings.cs" />
-    <Compile Include="Settings\GlobalSettings.cs" />
-    <Compile Include="Statistics\dto\DamageBlockedJson.cs" />
-    <Compile Include="Statistics\dto\PetDamageDealt.cs" />
-    <Compile Include="Statistics\dto\ResistEntryJson.cs" />
-    <Compile Include="Statistics\dto\EntityHealthEntryJson.cs" />
-    <Compile Include="Statistics\dto\GrimDawnStateEventJson.cs" />
-    <Compile Include="Statistics\dto\SimpleDamageEntryJson.cs" />
-    <Compile Include="Statistics\dto\DetailedDamageDealtJson.cs" />
-    <Compile Include="Statistics\dto\DetailedDamageTakenJson.cs" />
-    <Compile Include="Statistics\dto\EntityJson.cs" />
-    <Compile Include="Statistics\model\PlayerPosition.cs" />
-    <Compile Include="Statistics\model\RecognizedPosition.cs" />
-    <Compile Include="Statistics\Service\PositionTrackerService.cs" />
-    <Compile Include="Statistics\Service\StatisticsService.cs" />
-    <Compile Include="Tracking\Model\DamageBlockedEntry.cs" />
-    <Compile Include="Tracking\Model\DamageDealtEntry.cs" />
-    <Compile Include="Tracking\Model\PlayerLocation.cs" />
-    <Compile Include="Tracking\Model\ResistUpdatedEntry.cs" />
-    <Compile Include="Tracking\Model\DamageTakenEntry.cs" />
-    <Compile Include="Tracking\Model\DamageType.cs" />
-    <Compile Include="Tracking\Model\Entity.cs" />
-    <Compile Include="Tracking\Model\EntityHealthEntry.cs" />
-    <Compile Include="Tracking\Model\EntityType.cs" />
-    <Compile Include="Tracking\Model\IDamageEntry.cs" />
-    <Compile Include="Tracking\Model\ResistType.cs" />
-    <Compile Include="Utilities\AutoUpdateUtility.cs" />
-    <Compile Include="Utility\Timestamp.cs" />
-    <Compile Include="Utility\UuidGenerator.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Forms\DebugSettings.resx">
-      <DependentUpon>DebugSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Forms\WebView.resx">
-      <DependentUpon>WebView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
+    <ProjectReference Include="..\DllInjector\DllInjector.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="App.config" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -229,31 +115,31 @@
     <None Include="Log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DllInjector\DllInjector.csproj">
-      <Project>{2D6C0DC0-2FD0-4C18-9104-4F4689169D88}</Project>
-      <Name>DllInjector</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EvilsoftCommons\EvilsoftCommons.csproj">
-      <Project>{746523AB-F98D-4AC1-A8BB-468CAEB21F74}</Project>
-      <Name>EvilsoftCommons</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Content\js\charts\resist-graph.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\data\Database.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\logic\graph-damage-dealt-single-aoe.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\logic\graph-damage-taken-graph-handler.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\logic\PetDamageDealtGraphHandler.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\logic\pie-chart-damage-taken-processor.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\css\faq.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -403,39 +289,4 @@
     </Content>
     <Content Include="gd.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\cef.redist.x64.3.2704.1432\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2704.1432\build\cef.redist.x64.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\cef.redist.x64.3.2704.1432\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2704.1432\build\cef.redist.x64.targets'))" />
-    <Error Condition="!Exists('..\packages\cef.redist.x86.3.2704.1432\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2704.1432\build\cef.redist.x86.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.51.0.0\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.51.0.0\build\CefSharp.Common.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.51.0.0\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.51.0.0\build\CefSharp.Common.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.WinForms.51.0.0\build\CefSharp.WinForms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.WinForms.51.0.0\build\CefSharp.WinForms.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.WinForms.51.0.0\build\CefSharp.WinForms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.WinForms.51.0.0\build\CefSharp.WinForms.targets'))" />
-  </Target>
-  <Import Project="..\packages\cef.redist.x86.3.2704.1432\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2704.1432\build\cef.redist.x86.targets')" />
-  <Import Project="..\packages\CefSharp.Common.51.0.0\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.51.0.0\build\CefSharp.Common.targets')" />
-  <Import Project="..\packages\CefSharp.WinForms.51.0.0\build\CefSharp.WinForms.targets" Condition="Exists('..\packages\CefSharp.WinForms.51.0.0\build\CefSharp.WinForms.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

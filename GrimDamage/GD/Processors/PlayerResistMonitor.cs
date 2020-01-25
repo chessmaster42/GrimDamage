@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EvilsoftCommons;
-using GrimDamage.GD.Dto;
+﻿using GrimDamage.GD.Dto;
 using GrimDamage.Parser.Service;
 using GrimDamage.Settings;
 using GrimDamage.Tracking.Model;
 using log4net;
 
-namespace GrimDamage.GD.Processors {
+namespace GrimDamage.GD.Processors
+{
     class PlayerResistMonitor : IMessageProcessor {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(PlayerResistMonitor));
         private readonly DamageParsingService _damageParsingService;
@@ -22,7 +17,7 @@ namespace GrimDamage.GD.Processors {
         }
 
         public bool Process(MessageType type, byte[] data) {
-            if (type == MessageType.TypeResistMonitor) {
+            if (type == MessageType.ResistMonitor) {
                 int entityId = IOHelper.GetInt(data, 0);
                 ResistType resistType = (ResistType) IOHelper.GetInt(data, 4);
                 float amount = IOHelper.GetFloat(data, 8);

@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GrimDamage.Parser.Model;
+﻿using GrimDamage.Parser.Model;
 using GrimDamage.Settings;
 using GrimDamage.Statistics.dto;
 using GrimDamage.Utility;
 using log4net;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace GrimDamage.Parser.Service {
+namespace GrimDamage.Parser.Service
+{
     class GeneralStateService {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(GeneralStateService));
         private ConcurrentBag<GrimDawnStateEventJson> _states = new ConcurrentBag<GrimDawnStateEventJson>();
@@ -23,7 +21,7 @@ namespace GrimDamage.Parser.Service {
         public void PushState(GrimState state) {
             _states.Add(new GrimDawnStateEventJson {
                 Event = state.ToString(),
-                Timestamp = Timestamp.UTCMillisecondsNow
+                Timestamp = Timestamp.UtcMillisecondsNow
             });
             if (_appSettings.LogStateChanges) {
                 Logger.Debug($"GD State has been set to \"{state}\"");

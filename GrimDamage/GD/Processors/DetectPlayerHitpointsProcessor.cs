@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EvilsoftCommons;
-using EvilsoftCommons.Exceptions;
-using GrimDamage.GD.Dto;
+﻿using GrimDamage.GD.Dto;
 using GrimDamage.Parser.Service;
 using GrimDamage.Settings;
 using log4net;
+using System.Text;
 
-namespace GrimDamage.GD.Processors {
-    class DetectPlayerHitpointsProcessor : IMessageProcessor {
+namespace GrimDamage.GD.Processors
+{
+    public class DetectPlayerHitpointsProcessor : IMessageProcessor {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(DetectPlayerHitpointsProcessor));
         private readonly DamageParsingService _damageParsingService;
         private readonly AppSettings _appSettings;
@@ -21,16 +16,14 @@ namespace GrimDamage.GD.Processors {
             _appSettings = appSettings;
         }
 
-
         public bool Process(MessageType type, byte[] data) {
             switch (type) {
-                case MessageType.TypePlayerHealthOffsetDetected:
+                case MessageType.PlayerHealthOffsetDetected:
                     Logger.Info("Player health offset has been successfully detected");
                     return true;
 
-                case MessageType.TypeErrorDetectingPlayerHealthOffset: {
+                case MessageType.ErrorDetectingPlayerHealthOffset: {
                     Logger.Warn("Player health offset could not be detect, health graphs will be unavailable");
-                    ExceptionReporter.ReportIssue("No health offset");
 
                     StringBuilder hex = new StringBuilder(data.Length * 2);
                     foreach (byte b in data)
@@ -40,10 +33,9 @@ namespace GrimDamage.GD.Processors {
                     return true;
                 }
 
-                case MessageType.TYPE_ErrorDetectingPrimaryPlayerIdOffset: 
+                case MessageType.ErrorDetectingPrimaryPlayerIdOffset: 
                     {
                     Logger.Warn("Player id offset could not be detect, player id may be unavailable");
-                    ExceptionReporter.ReportIssue("No player id offset");
 
                     StringBuilder hex = new StringBuilder(data.Length * 2);
                     foreach (byte b in data)
@@ -53,7 +45,7 @@ namespace GrimDamage.GD.Processors {
                     return true;
                 }
 
-                case MessageType.TypeHitpointMonitor: 
+                case MessageType.HitpointMonitor: 
                     {
                         int entity = IOHelper.GetInt(data, 0);
                         float hp = IOHelper.GetFloat(data, 4);

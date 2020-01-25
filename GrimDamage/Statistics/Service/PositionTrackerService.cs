@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GrimDamage.Statistics.dto;
-using GrimDamage.Statistics.model;
+﻿using GrimDamage.Statistics.model;
 using GrimDamage.Tracking.Model;
 using GrimDamage.Utility;
 using log4net;
-using log4net.Repository.Hierarchy;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace GrimDamage.Statistics.Service {
+namespace GrimDamage.Statistics.Service
+{
     class PositionTrackerService {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(PositionTrackerService));
         private ConcurrentBag<PlayerLocation> _playerPositions = new ConcurrentBag<PlayerLocation>();

@@ -1,18 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace GrimDamage.GD.Dto
+{
+    public enum MessageType
+    {
+        PlayerHealthOffsetDetected = 100,
+        ErrorDetectingPlayerHealthOffset = 404,
 
-namespace GrimDamage.GD.Dto {
-    enum MessageType {
-        DamageToVictim = 45001,
         CharacterMovement1 = 1001,
         CharacterMovement2 = 1002,
         CharacterMovement3 = 1003,
         CharacterMovement4 = 1004,
         CharacterMovement5 = 1005,
         CharacterMovement6 = 1006,
+        HitpointMonitor = 1007,
+
+        ErrorDetectingPrimaryPlayerIdOffset = 1404,
+
+        BeginStun = 2001,
+        EndStun = 2002,
+        BeginTrap = 2003,
+        EndTrap = 2004,
+        DisableMovement = 2005,
+        SetLifeState = 2006,
+
+        Pause = 20000,
+        Unpause = 20001,
+        PlayerIdDetected = 20002,
+        PlayerDied = 20003,
+
+        LogUnrecognized = 45000,
+
+        DamageToVictim = 45001,
         LifeLeech = 45002,
         TotalDamage = 45003,
         SetAttackerName = 45004,
@@ -24,24 +41,7 @@ namespace GrimDamage.GD.Dto {
         Reflect = 45010,
         Block = 45011,
         EndCombat = 45012,
-        LogUnrecognized = 45000,
 
-
-        Pause = 20000,
-        Unpause = 20001,
-        PlayerIdDetected = 20002, // TODO: Hopefully this isnt called for both thyself and the host. If it is, hopefully the first call is always thyself. Still an issue when starting a new game though.
-        PlayerDied = 20003,
-        BeginStun = 2001,
-        EndStun = 2002,
-        BeginTrap = 2003,
-        EndTrap = 2004,
-        DisableMovement = 2005,
-        SetLifeState = 2006,
-
-        TypePlayerHealthOffsetDetected = 100,
-        TypeErrorDetectingPlayerHealthOffset = 404,
-        TYPE_ErrorDetectingPrimaryPlayerIdOffset = 1404,
-        TypeHitpointMonitor = 1007,
-        TypeResistMonitor = 10101010,
+        ResistMonitor = 10101010
     }
 }

@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GrimDamage.Parser.Service;
+﻿using GrimDamage.Parser.Service;
 using GrimDamage.Statistics.dto;
 using GrimDamage.Tracking.Model;
 using GrimDamage.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace GrimDamage.Statistics.Service {
+namespace GrimDamage.Statistics.Service
+{
     public class StatisticsService {
         private DateTime _lastUpdateTimeDamageDealt = DateTime.UtcNow;
         private readonly DamageParsingService _damageParsingService;

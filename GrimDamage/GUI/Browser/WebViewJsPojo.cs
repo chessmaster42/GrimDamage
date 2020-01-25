@@ -1,69 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using GrimDamage.GUI.Browser.dto;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using GrimDamage.GUI.Browser.dto;
-using GrimDamage.Statistics.dto;
-using GrimDamage.Tracking.Model;
-using Newtonsoft.Json;
 
-namespace GrimDamage.GUI.Browser {
-    // ReSharper disable InconsistentNaming
-    // ReSharper disable MemberCanBePrivate.Global
-    // ReSharper disable UnusedAutoPropertyAccessor.Global
-    public class WebViewJsPojo {
+namespace GrimDamage.GUI.Browser
+{
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    public class WebViewJsPojo
+    {
         public event EventHandler OnSave;
         public event EventHandler OnLog;
         public event EventHandler OnRequestData;
         public event EventHandler OnSetLightMode;
         
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string api { get; set; }
 
-
-        public string version {
-            get {
+        public string version
+        {
+            get
+            {
 
                 var v = Assembly.GetExecutingAssembly().GetName().Version;
-                DateTime buildDate = new DateTime(2000, 1, 1)
-                    .AddDays(v.Build)
-                    .AddSeconds(v.Revision * 2);
-                /*
-                int daysAgo = (DateTime.UtcNow - buildDate).Days;
-                if (daysAgo > 0) {
-                    return $"Running version {v.Major}.{v.Minor}.{v.Build}.{v.Revision} released {buildDate:dd/MM/yyyy} ({daysAgo} days ago)";
-                }
-                else {
-                    return $"Running version {v.Major}.{v.Minor}.{v.Build}.{v.Revision} released {buildDate:dd/MM/yyyy} (today)";
-                }
-                */
 
-                return $"Running version {v.Major}.{v.Minor}.{v.Build}.{v.Revision} - Final release - Tool discontinued";
+                return $"Running version {v.Major}.{v.Minor}.{v.Build}.{v.Revision}";
             }
         }
 
-
-        public void save(string json) {
-            OnSave?.Invoke(this, new SaveParseArgument() {
-                Data = json
-            });
-        }
-        public void log(string json) {
-            OnLog?.Invoke(this, new SaveParseArgument() {
+        public void save(string json)
+        {
+            OnSave?.Invoke(this, new SaveParseArgument
+            {
                 Data = json
             });
         }
 
-        public void setLightMode(string mode) {
-            OnSetLightMode?.Invoke(this, new LightModeArgument {
+        public void log(string json)
+        {
+            OnLog?.Invoke(this, new SaveParseArgument
+            {
+                Data = json
+            });
+        }
+
+        public void setLightMode(string mode)
+        {
+            OnSetLightMode?.Invoke(this, new LightModeArgument
+            {
                 IsDarkMode = mode.ToLower() == "dark"
             });
         }
 
-
-        public void requestData(int type, string start, string end, int id, string callback) {
-            OnRequestData?.Invoke(this, new RequestDataArgument {
+        public void requestData(int type, string start, string end, int id, string callback)
+        {
+            OnRequestData?.Invoke(this, new RequestDataArgument
+            {
                 Type = (DataRequestType)type,
                 TimestampStart = start,
                 TimestampEnd = end,
@@ -71,9 +63,5 @@ namespace GrimDamage.GUI.Browser {
                 EntityId = id
             });
         }
-        
     }
-    // ReSharper enable InconsistentNaming
-    // ReSharper enable MemberCanBePrivate.Global
-    // ReSharper enable UnusedAutoPropertyAccessor.Global
 }

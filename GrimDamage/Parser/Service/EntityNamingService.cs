@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
-namespace GrimDamage.Parser.Service {
+namespace GrimDamage.Parser.Service
+{
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     class EntityNamingService {
 
         public string GetName(string record) {
             if (_entityMap.ContainsKey(record))
                 return _entityMap[record];
-            else {
-                return "Unknown";
-            }
+            return "Unknown";
         }
-
 		
         private Dictionary<string, string> _entityMap = new Dictionary<string, string> {
 			// NPCs
